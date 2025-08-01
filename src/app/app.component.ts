@@ -8,5 +8,5 @@ import { RouterOutlet } from "@angular/router";
     imports: [RouterOutlet]
 })
 export class AppComponent {
-  title = 'sitrack-tickets-front';
+  title = 'road-sentinel-front';
 }
