@@ -1,0 +1,23 @@
+<div class="otp-container">
+    <p class="instruction-text">Hemos enviado un código OTP a:</p>
+    <p class="email-display">{{ email }}</p>
+    <p class="instruction-text">Por favor, ingrésalo a continuación.</p>
+
+    <form [formGroup]="otpForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full my-5">
+        <mat-label>Código OTP</mat-label>
+        <input matInput formControlName="otp" type="text" placeholder="XXXXXX" maxlength="6" required>
+        <mat-error *ngIf="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched">
+        Por favor, ingrese un código OTP válido (6 dígitos).
+        </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="otpForm.invalid" class="full-width verify-button">
+        Verificar OTP
+    </button>
+
+    <button mat-button color="accent" type="button" (click)="onBackToEmail()" class="full-width back-button">
+        Volver a ingresar email
+    </button>
+    </form>
+</div>

@@ -1,0 +1,29 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #202A40; /* Primario de la paleta corporativa */
+}
+
+.login-card {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  text-align: center;
+  background-color: #fff; /* Fondo claro para la tarjeta */
+}
+
+.sitrack-logo {
+  font-size: 2em;
+  font-weight: bold;
+  color: #202A40;
+  margin-bottom: 10px;
+}
+
+mat-card-subtitle {
+  color: #282e33;
+  margin-bottom: 20px;
+}

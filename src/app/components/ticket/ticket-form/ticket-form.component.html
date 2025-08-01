@@ -1,0 +1,200 @@
+<form [formGroup]="ticketForm" autocomplete="off" (submit)="saveTicket()" class="space-y-8">
+  <section class="shadow-lg rounded-xl p-6" appearance="raised">
+    <h4 class="text-2xl font-bold mb-4">Agregar Ticket</h4>
+    <section>
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Datos Generales</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Número de orden</mat-label>
+            <input matInput formControlName="orderNumber">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let s of statusOptions" [value]="s">{{s}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Prioridad</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let p of priorityOptions" [value]="p">{{p}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Tipo de cliente</mat-label>
+            <mat-select formControlName="customerType">
+              <mat-option *ngFor="let ct of customerTypeOptions" [value]="ct">{{ct}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Tipo de negocio</mat-label>
+            <mat-select formControlName="businessType">
+              <mat-option *ngFor="let bt of businessTypeOptions" [value]="bt">{{bt}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let c of categoryOptions" [value]="c">{{c}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Datos del cliente</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Seleccione cliente (escriba para buscar)</mat-label>
+            <input matInput [formControl]="customerCtrl" [matAutocomplete]="customerAuto">
+            <mat-autocomplete #customerAuto="matAutocomplete" [displayWith]="displayCustomer" (optionSelected)="onCustomerSelected($event)">
+              <mat-option *ngFor="let customer of filteredCustomers$ | async" [value]="customer">
+                {{customer.socialReason || customer.commercialName}} ({{customer.id}})
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <ng-container *ngIf="selectedCustomerContacts.length > 0">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Seleccione contacto</mat-label>
+              <mat-select (selectionChange)="onCustomerContactSelected($event.value)">
+                <mat-option *ngFor="let contact of selectedCustomerContacts" [value]="contact.email">
+                  {{contact.name}} - {{contact.email}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nombre del contacto</mat-label>
+            <input matInput formControlName="customerContactName">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Teléfono del contacto</mat-label>
+            <input matInput formControlName="customerContactPhone">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email del contacto</mat-label>
+            <input matInput formControlName="customerContactEmail">
+          </mat-form-field>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Agencia</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Seleccione agencia (escriba para buscar)</mat-label>
+            <input matInput [formControl]="dealerCtrl" [matAutocomplete]="dealerAuto">
+            <mat-autocomplete #dealerAuto="matAutocomplete" [displayWith]="displayDealer" (optionSelected)="onDealerSelected($event)">
+              <mat-option *ngFor="let dealer of filteredDealers$ | async" [value]="dealer">
+                {{dealer.commercialName}} ({{dealer.id}})
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <ng-container *ngIf="selectedDealerContacts.length > 0">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Seleccione contacto</mat-label>
+              <mat-select (selectionChange)="onDealerContactSelected($event.value)">
+                <mat-option *ngFor="let contact of selectedDealerContacts" [value]="contact.email">
+                  {{contact.name}} - {{contact.email}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nombre del contacto</mat-label>
+            <input matInput formControlName="dealerContactName">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Teléfono del contacto</mat-label>
+            <input matInput formControlName="dealerContactPhone">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email del contacto</mat-label>
+            <input matInput formControlName="dealerContactEmail">
+          </mat-form-field>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Vehículos</h3>
+        <div formArrayName="vehicles">
+          <div *ngFor="let vehicle of vehicles.controls; let i = index" [formGroupName]="i" class="mb-6">
+            <mat-card class="shadow-md rounded-lg p-4 bg-gray-50">
+              <mat-card-title class="font-semibold text-lg mb-2">Vehículo #{{i + 1}}</mat-card-title>
+              <mat-card-content>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>VIN</mat-label>
+                    <input matInput formControlName="vin">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Placa</mat-label>
+                    <input matInput formControlName="plate">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Número económico</mat-label>
+                    <input matInput formControlName="vehicleNumber">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Tipo de vehículo</mat-label>
+                    <input matInput formControlName="vehicleType">
+                  </mat-form-field>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Marca</mat-label>
+                    <input matInput formControlName="make">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Modelo</mat-label>
+                    <input matInput formControlName="model">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Solución</mat-label>
+                    <input matInput formControlName="solution">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Ubicación</mat-label>
+                    <input matInput formControlName="subAddress">
+                  </mat-form-field>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Disponible desde</mat-label>
+                    <input matInput formControlName="availabilityFrom" type="date">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Disponible hasta</mat-label>
+                    <input matInput formControlName="availabilityTo" type="date">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Status del vehículo</mat-label>
+                    <mat-select formControlName="vehicleStatus">
+                      <mat-option *ngFor="let vs of vehicleStatusOptions" [value]="vs">{{vs}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="flex items-center gap-4 mt-4">
+                  <mat-checkbox formControlName="requiredPhysicalInstallation">Requiere instalación física</mat-checkbox>
+                  <mat-checkbox formControlName="availableForInstallation">Disponible para instalación</mat-checkbox>
+                  <button mat-raised-button color="warn" type="button" (click)="vehicles.removeAt(i)" class="ml-auto">Quitar vehículo</button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <button mat-raised-button color="primary" type="button" (click)="addVehicle()" class="mt-2">Agregar vehículo</button>
+        </div>
+      </div>
+    </section>
+    <section class="flex justify-end mt-6">
+      <button mat-raised-button color="primary" type="submit" [disabled]="ticketForm.invalid" class="px-6 py-2">Guardar</button>
+    </section>
+  </section>
+</form>

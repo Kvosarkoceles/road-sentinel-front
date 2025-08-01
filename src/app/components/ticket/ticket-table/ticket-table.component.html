@@ -1,0 +1,101 @@
+<div class="mt-5">
+  <div class="mb-10 flex justify-between align-center w-full">
+    <h1 class="text-2xl">Tickets</h1>
+    <a mat-raised-button routerLink="/solicitudes/nuevo" matTooltip="Solicitudes">
+      <span class="nav-link-text">Nueva solicitud</span>
+      <mat-icon>assignment</mat-icon>
+    </a>
+  </div>
+
+  <hr>
+
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="ticketId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Folio (nuevo)</th>
+      <td mat-cell *matCellDef="let ticket">
+        <span class="bg-green-100 text-green-800 px-2 py-1 rounded font-semibold">
+          {{ticket.ticketId}}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="oldTicketId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Folio (sistema anterior)</th>
+      <td mat-cell *matCellDef="let ticket">
+        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded font-semibold">
+          {{ticket.oldTicketId}}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
+      <td mat-cell *matCellDef="let ticket">{{ticket.customerName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dealerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Agencia</th>
+      <td mat-cell *matCellDef="let ticket">{{ticket.dealerName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="coordinatorName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Coordinator</th>
+      <td mat-cell *matCellDef="let ticket">{{ticket.coordinatorName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let ticket">
+        <span [ngClass]="{
+          'bg-green-100 text-green-800': ticket.status === 'INSTALADO',
+          'bg-yellow-100 text-yellow-800': ticket.status === 'CON_CITA' || ticket.status === 'ASIGNADO',
+          'bg-blue-100 text-blue-800': ticket.status === 'RECIBIDO' || ticket.status === 'EN_PROCESO_DE_COORDINACION',
+          'bg-red-100 text-red-800': ticket.status === 'CANCELADO_SITRACK' || ticket.status === 'CANCELADO_CLIENTE'
+        }" class="px-2 py-1 rounded font-semibold">
+          {{ticket.status}}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="priority">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Prioridad</th>
+      <td mat-cell *matCellDef="let ticket">
+        <span [ngClass]="{
+          'bg-green-100 text-green-800': ticket.priority === 'BAJA',
+          'bg-yellow-100 text-yellow-800': ticket.priority === 'MEDIA',
+          'bg-orange-100 text-orange-800': ticket.priority === 'ALTA',
+          'bg-red-100 text-red-800': ticket.priority === 'URGENTE'
+        }" class="px-2 py-1 rounded font-semibold">
+          {{ticket.priority}}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha solicitud</th>
+      <td mat-cell *matCellDef="let ticket">{{ticket.createdAt | date:'d/M/yy, h:mm a'}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Editar</th>
+      <td mat-cell *matCellDef="let ticket">
+        <div class="flex align-center">
+          <a mat-icon-button [routerLink]="['/solicitudes/editar/', ticket.id]"
+            matTooltip="Editar solicitud">
+            <mat-icon style="color: #1976d2">edit</mat-icon>
+          </a>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="pageSizeOptions"
+                 [pageSize]="pageSize"
+                 [length]="totalElements"
+                 [showFirstLastButtons]="true"
+                 aria-label="Seleccionar página de tickets">
+  </mat-paginator>
+</div>

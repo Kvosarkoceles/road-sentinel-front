@@ -1,0 +1,13 @@
+<form [formGroup]="emailForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="w-full mb-5">
+        <mat-label>Correo Electrónico</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="ejemplo@sitrack.mx" required>
+        <mat-error *ngIf="emailForm.get('email')?.invalid && emailForm.get('email')?.touched">
+            Por favor, ingrese un correo electrónico válido.
+        </mat-error>
+    </mat-form-field>
+
+    <button matButton="filled" color="primary" type="submit" [disabled]="emailForm.invalid" class="w-full">
+    Solicitar OTP
+    </button>
+</form>

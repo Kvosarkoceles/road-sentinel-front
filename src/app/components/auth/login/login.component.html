@@ -1,0 +1,14 @@
+    <div class="login-container">
+      <mat-card class="login-card">
+        <mat-card-title class="sitrack-logo">Sitrack Admin</mat-card-title>
+        <mat-card-subtitle>Acceso al sistema</mat-card-subtitle>
+
+        <ng-container *ngIf="!otpSent; else otpInput">
+          <app-email-input (emailSubmitted)="handleEmailSubmit($event)"></app-email-input>
+        </ng-container>
+
+        <ng-template #otpInput>
+          <app-otp-input [email]="userEmail" (otpSubmitted)="handleOtpSubmit($event)" (backToEmail)="handleBackToEmail()"></app-otp-input>
+        </ng-template>
+      </mat-card>
+    </div>

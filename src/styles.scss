@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+@use 'src_theme-colors' as theme;
+@use "tailwindcss";
+@use "sass:map";
+
+@include mat.core();
+
+$my-material-app-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: theme.$primary-palette,
+      tertiary: theme.$tertiary-palette,
+      use-system-variables: true,
+    ),
+    typography: (
+      use-system-variables: true,
+    ),
+    density: (
+      scale: 0,
+    ),
+  )
+);
+
+:root {
+  @include mat.all-component-themes($my-material-app-theme);
+  @include mat.system-level-colors($my-material-app-theme);
+  @include mat.system-level-typography($my-material-app-theme);
+}

@@ -1,0 +1,13 @@
+mat-toolbar {
+    display: flex;
+    
+    h1 {
+        flex: 1; // Esto hará que el título ocupe el espacio disponible
+        text-align: center;
+    }
+    
+    // Estilo para el botón de logout
+    .logout-button {
+        margin-left: auto;
+    }
+}

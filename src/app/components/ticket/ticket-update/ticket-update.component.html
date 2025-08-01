@@ -1,0 +1,262 @@
+<form *ngIf="ticket" [formGroup]="updateForm" autocomplete="off" (ngSubmit)="onUpdate()" class="space-y-8">
+  <section>
+    <h4 class="text-2xl font-bold mb-4">Actualizar Ticket</h4>
+    <section>
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Datos Generales</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Número de orden</mat-label>
+            <input matInput [value]="ticket.orderNumber" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let s of statusOptions" [value]="s">{{s}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Prioridad</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let p of priorityOptions" [value]="p">{{p}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Tipo de cliente</mat-label>
+            <input matInput [value]="ticket.customerType" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Tipo de negocio</mat-label>
+            <input matInput [value]="ticket.businessType" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Categoría</mat-label>
+            <input matInput [value]="ticket.category" disabled>
+          </mat-form-field>
+        </div>
+        <!-- Read-only fields -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>ID Ticket</mat-label>
+            <input matInput [value]="ticket.ticketId" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Cliente</mat-label>
+            <input matInput [value]="ticket.customerName" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Agencia</mat-label>
+            <input matInput [value]="ticket.dealerName" disabled>
+          </mat-form-field>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Datos del cliente</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ng-container *ngIf="selectedCustomerContacts.length > 0">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Seleccione contacto</mat-label>
+              <mat-select (selectionChange)="onCustomerContactSelected($event.value)" [value]="selectedCustomerContact?.email">
+                <mat-option *ngFor="let contact of selectedCustomerContacts" [value]="contact.email">
+                  {{contact.name}} - {{contact.email}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nombre del contacto</mat-label>
+            <input matInput formControlName="customerContactName">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Teléfono del contacto</mat-label>
+            <input matInput formControlName="customerContactPhone">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email del contacto</mat-label>
+            <input matInput formControlName="customerContactEmail">
+          </mat-form-field>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Agencia</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ng-container *ngIf="selectedDealerContacts.length > 0">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Seleccione contacto</mat-label>
+              <mat-select (selectionChange)="onDealerContactSelected($event.value)" [value]="selectedDealerContact?.email">
+                <mat-option *ngFor="let contact of selectedDealerContacts" [value]="contact.email">
+                  {{contact.name}} - {{contact.email}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Nombre del contacto</mat-label>
+            <input matInput formControlName="dealerContactName">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Teléfono del contacto</mat-label>
+            <input matInput formControlName="dealerContactPhone">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email del contacto</mat-label>
+            <input matInput formControlName="dealerContactEmail">
+          </mat-form-field>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Vehículos</h3>
+        <div formArrayName="vehicles">
+          <div *ngFor="let vehicle of vehicles.controls; let i = index" [formGroupName]="i" class="mb-6">
+            <mat-card class="shadow-md rounded-lg p-4 bg-gray-50">
+              <mat-card-title class="font-semibold text-lg mb-2">Vehículo #{{i + 1}}</mat-card-title>
+              <mat-card-content>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>VIN</mat-label>
+                    <input matInput [value]="vehicle.value.vin" disabled>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Placa</mat-label>
+                    <input matInput formControlName="plate">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Número económico</mat-label>
+                    <input matInput formControlName="vehicleNumber">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Tipo de vehículo</mat-label>
+                    <input matInput formControlName="vehicleType">
+                  </mat-form-field>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Marca</mat-label>
+                    <input matInput formControlName="make">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Modelo</mat-label>
+                    <input matInput formControlName="model">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Solución</mat-label>
+                    <input matInput formControlName="solution">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Ubicación</mat-label>
+                    <input matInput formControlName="subAddress">
+                  </mat-form-field>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Disponible desde</mat-label>
+                    <input matInput formControlName="availabilityFrom" type="date">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Disponible hasta</mat-label>
+                    <input matInput formControlName="availabilityTo" type="date">
+                  </mat-form-field>
+                  <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Status del vehículo</mat-label>
+                    <mat-select formControlName="vehicleStatus">
+                      <mat-option *ngFor="let vs of vehicleStatusOptions" [value]="vs">{{vs}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="flex items-center gap-4 mt-4">
+                  <mat-checkbox formControlName="requiredPhysicalInstallation">Requiere instalación física</mat-checkbox>
+                  <mat-checkbox formControlName="availableForInstallation">Disponible para instalación</mat-checkbox>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+      <hr class="my-6">
+      <div>
+        <h3 class="text-lg font-semibold mb-2">Atención Sitrack</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Coordinador</mat-label>
+            <input matInput [value]="ticket.coordinatorName" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Técnico</mat-label>
+            <input matInput formControlName="technicianName">
+          </mat-form-field>
+        </div>
+      </div>
+      <section class="flex justify-end mt-6">
+        <button mat-raised-button color="primary" type="submit" [disabled]="updateForm.invalid" class="px-6 py-2">Actualizar datos</button>
+      </section>
+    </section>
+  </section>
+</form>
+
+<hr class="my-6">
+
+<form *ngIf="ticket" [formGroup]="commentForm" autocomplete="off" (ngSubmit)="addComment()" class="space-y-8">
+  <section>
+    <h3 class="text-lg font-semibold mb-2">Comentarios</h3>
+    <table mat-table [dataSource]="comments" class="w-full mb-4" *ngIf="comments.length > 0">
+      <ng-container matColumnDef="timestamp">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let c">{{ c.timestamp | date:'d/M/yy, h:mm a' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef>Usuario</th>
+        <td mat-cell *matCellDef="let c">{{ c.userName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="comment">
+        <th mat-header-cell *matHeaderCellDef>Comentario</th>
+        <td mat-cell *matCellDef="let c">{{ c.comment }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['timestamp', 'userName', 'comment']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['timestamp', 'userName', 'comment'];"></tr>
+    </table>
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Agregar comentario</mat-label>
+      <textarea matInput formControlName="comment" rows="3"></textarea>
+    </mat-form-field>
+    <div class="flex justify-end mt-2">
+      <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid" class="px-6 py-2">Agregar comentario</button>
+    </div>
+  </section>
+  <hr class="my-6">
+  <section>
+    <h3 class="text-lg font-semibold mb-2">Bitácora de eventos</h3>
+    <table mat-table [dataSource]="events" class="w-full mb-4" *ngIf="events.length > 0">
+      <ng-container matColumnDef="timestamp">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let e">{{ e.timestamp | date:'d/M/yy, h:mm a' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef>Usuario</th>
+        <td mat-cell *matCellDef="let e">{{ e.userName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Descripción</th>
+        <td mat-cell *matCellDef="let e">{{ e.description }}</td>
+      </ng-container>
+      <ng-container matColumnDef="oldValue">
+        <th mat-header-cell *matHeaderCellDef>Valor anterior</th>
+        <td mat-cell *matCellDef="let e">{{ e.oldValue }}</td>
+      </ng-container>
+      <ng-container matColumnDef="newValue">
+        <th mat-header-cell *matHeaderCellDef>Valor nuevo</th>
+        <td mat-cell *matCellDef="let e">{{ e.newValue }}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['timestamp', 'userName', 'description', 'oldValue', 'newValue']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['timestamp', 'userName', 'description', 'oldValue', 'newValue'];"></tr>
+    </table>
+  </section>
+</form>

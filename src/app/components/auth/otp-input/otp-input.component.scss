@@ -1,0 +1,37 @@
+.otp-container {
+  text-align: center;
+}
+
+.instruction-text {
+  color: #282e33;
+  margin-bottom: 5px;
+}
+
+.email-display {
+  font-weight: bold;
+  color: #202A40;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.verify-button {
+  background-color: #FF8100 !important; /* Secundario de la paleta corporativa */
+  color: #fff !important;
+  font-weight: bold;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+.back-button {
+  color: #202A40 !important;
+  border: 1px solid #202A40;
+  background-color: transparent;
+  &:hover {
+    background-color: rgba(#202A40, 0.05);
+  }
+}

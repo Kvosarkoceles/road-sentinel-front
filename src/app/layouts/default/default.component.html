@@ -1,0 +1,24 @@
+<div>
+  <mat-toolbar class="bg-blue-500">
+    <button mat-icon-button (click)="toggleSidebar()"><mat-icon>menu</mat-icon></button>
+    <h1>Sitrack Admin</h1>
+    <button mat-icon-button class="logout-button" (click)="logout()" matTooltip="Cerrar sesión">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" [(opened)]="isExpanded" [opened]="true">
+      <mat-nav-list>
+        <a mat-list-item routerLink="/solicitudes" matTooltip="Solicitudes">
+          <mat-icon matListItemIcon>assignment</mat-icon>
+          <span class="nav-link-text">Solicitudes</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="h-dvh p-8">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
